@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Numerics;
 
 namespace FractionClass
 {
@@ -24,6 +25,12 @@ namespace FractionClass
             Console.WriteLine(new Fraction(4, new Fraction(2,1) ));
             Console.WriteLine(new Fraction(2,1));
             Console.WriteLine(new Fraction(0.5,0.5));
+
+            Console.WriteLine(fraction4.Pow(8).GetRealValue());
+            Console.WriteLine(fraction4.Pow(8));
+
+            Console.WriteLine(fraction1 > fraction2);
+            Console.WriteLine(fraction1.GetRealValue() + " " + fraction2.GetRealValue());
         }
     }
 }
