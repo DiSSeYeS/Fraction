@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Fraction
+namespace FractionClass
 {
     public class Program()
     {
@@ -20,6 +20,8 @@ namespace Fraction
             Console.WriteLine($"{fraction3} - {fraction3} = {fraction3 - fraction3}");
             Console.WriteLine($"(({fraction2}) / ({fraction1})) * {fraction4} = {new Fraction(fraction2, fraction1) * fraction4}");
             Console.WriteLine($"{fraction1} / {fraction4} = {fraction1 / fraction4}");
+
+            Console.WriteLine(new Fraction(3));
         }
     }
 }
