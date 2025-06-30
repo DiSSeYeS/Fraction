@@ -21,7 +21,9 @@ namespace FractionClass
             Console.WriteLine($"(({fraction2}) / ({fraction1})) * {fraction4} = {new Fraction(fraction2, fraction1) * fraction4}");
             Console.WriteLine($"{fraction1} / {fraction4} = {fraction1 / fraction4}");
 
-            Console.WriteLine(new Fraction(3));
+            Console.WriteLine(new Fraction(4, new Fraction(2,1) ));
+            Console.WriteLine(new Fraction(2,1));
+            Console.WriteLine(new Fraction(0.5,0.5));
         }
     }
 }

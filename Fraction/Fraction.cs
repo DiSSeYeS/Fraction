@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -16,7 +17,7 @@ namespace FractionClass
         private int numerator;
         private int denominator;
 
-        public Fraction(int numerator = 1, int denominator = 1)
+        public Fraction(int numerator, int denominator)
         {
             if (denominator == 0 && numerator != 0)
             {
@@ -46,58 +47,58 @@ namespace FractionClass
         public Fraction(Fraction fraction) : this(fraction.numerator, fraction.denominator)
         {
         }
-        public Fraction(Fraction numerator, Fraction denominator) : this((numerator / denominator).numerator, (numerator / denominator).denominator)
+        public Fraction(Fraction numerator, Fraction denominator) : this(numerator / denominator)
         {
         }
-        public Fraction(Fraction numerator, int denominator) : this((numerator / denominator).numerator, (numerator / denominator).denominator)
+        public Fraction(Fraction numerator, int denominator) : this(numerator, new Fraction(denominator))
         {
         }
-        public Fraction(int numerator, Fraction denominator) : this((numerator / denominator).numerator, (numerator / denominator).denominator)
+        public Fraction(int numerator, Fraction denominator) : this(new Fraction(numerator), denominator)
         {
         }
-        public Fraction(double num, Fraction fraction) : this(ConvertDoubleToFraction(num).Item1 * fraction.denominator, ConvertDoubleToFraction(num).Item2 * fraction.numerator)
+        public Fraction(double num, Fraction fraction) : this(new Fraction(num) / fraction)
         {
         }
-        public Fraction(Fraction fraction, double num) : this(fraction.numerator * ConvertDoubleToFraction(num).Item2, fraction.denominator * ConvertDoubleToFraction(num).Item1)
+        public Fraction(Fraction fraction, double num) : this(fraction / new Fraction(num))
         {
         }
-        public Fraction(double a, double b) : this(ConvertDoubleToFraction(a).Item1 * ConvertDoubleToFraction(b).Item2, ConvertDoubleToFraction(b).Item2 * ConvertDoubleToFraction(a).Item1)
+        public Fraction(double a, double b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(double a, int b) : this(ConvertDoubleToFraction(a).Item1, ConvertDoubleToFraction(a).Item2 * b)
+        public Fraction(double a, int b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(int a, double b) : this(a * ConvertDoubleToFraction(b).Item1, ConvertDoubleToFraction(b).Item2)
+        public Fraction(int a, double b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(decimal num, Fraction fraction) : this(ConvertDoubleToFraction((double)num).Item1 * fraction.denominator, ConvertDoubleToFraction((double)num).Item2 * fraction.numerator)
+        public Fraction(decimal num, Fraction fraction) : this(new Fraction(num) / fraction)
         {
         }
-        public Fraction(Fraction fraction, decimal num) : this(fraction.numerator * ConvertDoubleToFraction((double)num).Item2, fraction.denominator * ConvertDoubleToFraction((double)num).Item1)
+        public Fraction(Fraction fraction, decimal num) : this(fraction / new Fraction(num))
         {
         }
-        public Fraction(decimal a, decimal b) : this(ConvertDoubleToFraction((double)a).Item1 * ConvertDoubleToFraction((double)b).Item2, ConvertDoubleToFraction((double)b).Item2 * ConvertDoubleToFraction((double)a).Item1)
+        public Fraction(decimal a, decimal b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(decimal a, int b) : this(ConvertDoubleToFraction((double)a).Item1, ConvertDoubleToFraction((double)a).Item2 * b)
+        public Fraction(decimal a, int b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(int a, decimal b) : this(a * ConvertDoubleToFraction((double)b).Item1, ConvertDoubleToFraction((double)b).Item2)
+        public Fraction(int a, decimal b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(float num, Fraction fraction) : this(ConvertDoubleToFraction((double)num).Item1 * fraction.denominator, ConvertDoubleToFraction((double)num).Item2 * fraction.numerator)
+        public Fraction(float num, Fraction fraction) : this(new Fraction(num) / fraction)
         {
         }
-        public Fraction(Fraction fraction, float num) : this(fraction.numerator * ConvertDoubleToFraction((double)num).Item2, fraction.denominator * ConvertDoubleToFraction((double)num).Item1)
+        public Fraction(Fraction fraction, float num) : this(fraction / new Fraction(num))
         {
         }
-        public Fraction(float a, float b) : this(ConvertDoubleToFraction((double)a).Item1 * ConvertDoubleToFraction((double)b).Item2, ConvertDoubleToFraction((double)b).Item2 * ConvertDoubleToFraction((double)a).Item1)
+        public Fraction(float a, float b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(float a, int b) : this(ConvertDoubleToFraction((double)a).Item1, ConvertDoubleToFraction((double)a).Item2 * b)
+        public Fraction(float a, int b) : this(new Fraction(a), new Fraction(b))
         {
         }
-        public Fraction(int a, float b) : this(a * ConvertDoubleToFraction((double)b).Item1, ConvertDoubleToFraction((double)b).Item2)
+        public Fraction(int a, float b) : this(new Fraction(a), new Fraction(b))
         {
         }
         public Fraction(int num) : this(ConvertDoubleToFraction((double)num).Item1, ConvertDoubleToFraction((double)num).Item2)
@@ -114,38 +115,17 @@ namespace FractionClass
         }
         private static Tuple<int, int> ConvertDoubleToFraction(double num)
         {
-            string numberStr = num.ToString();
-            var parts = numberStr.Split('.');
-
-            int numerator;
-            int denominator;
-
-            if (parts.Length == 1)
+            if (num % 1 == 0)
             {
-                numerator = (int)num;
-                denominator = 1;
-            }
-            else
-            {
-                string integerPartStr = parts[0];
-                string fractionalPartStr = parts[1];
-
-                int numberBeforePoint = int.Parse(integerPartStr.Replace("-", ""));
-                int numberAfterPoint = int.Parse(fractionalPartStr);
-                int countOfDigitsAfterPoint = fractionalPartStr.Length;
-
-                denominator = (int)Math.Pow(10, countOfDigitsAfterPoint);
-
-                if (num < 0)
-                    numerator = -numberBeforePoint * denominator - numberAfterPoint;
-                else
-                    numerator = numberBeforePoint * denominator + numberAfterPoint;
+                return Tuple.Create((int)num, 1);
             }
 
-            if (denominator == 0)
-                denominator = 1;
+            int numberBeforePoint = int.Parse(num.ToString().Split(",").First().Replace("-", ""));
+            int numberAfterPoint = int.Parse(num.ToString().Split(",").Last());
+            int countOfDigitsAfterPoint = num.ToString().Split(",").Last().Length;
+            int denominator = (int)Math.Pow(10, countOfDigitsAfterPoint);
 
-            return Tuple.Create(numerator, denominator);
+            return Tuple.Create(numberBeforePoint * denominator + numberAfterPoint, denominator);
         }
         public static implicit operator Fraction(int numerator) => new Fraction(numerator);
         public static implicit operator Fraction(double numerator) => new Fraction(numerator);
@@ -180,22 +160,22 @@ namespace FractionClass
         public static Fraction operator -(float a, Fraction b) => (-b) + a;
         public static Fraction operator *(Fraction a, Fraction b) => new Fraction(a.numerator * b.numerator, a.denominator * b.denominator);
         public static Fraction operator *(Fraction a, int b) => new Fraction(a.numerator * b, a.denominator);
-        public static Fraction operator *(Fraction a, double b) => a * new Fraction(b);
-        public static Fraction operator *(Fraction a, decimal b) => a * new Fraction(b);
-        public static Fraction operator *(Fraction a, float b) => a * new Fraction(b);
+        public static Fraction operator *(Fraction a, double b) => new Fraction(a.numerator * b, a.denominator);
+        public static Fraction operator *(Fraction a, decimal b) => new Fraction(a.numerator * b, a.denominator);
+        public static Fraction operator *(Fraction a, float b) => new Fraction(a.numerator * b, a.denominator);
         public static Fraction operator *(int a, Fraction b) => b * a;
         public static Fraction operator *(double a, Fraction b) => b * a;
         public static Fraction operator *(decimal a, Fraction b) => b * a;
         public static Fraction operator *(float a, Fraction b) => b * a;
         public static Fraction operator /(Fraction a, Fraction b) => new Fraction(a.numerator * b.denominator, a.denominator * b.numerator);
-        public static Fraction operator /(Fraction a, int b) => a * new Fraction(1, b);
-        public static Fraction operator /(Fraction a, double b) => a * new Fraction(1,b);
-        public static Fraction operator /(Fraction a, decimal b) => a * new Fraction(1, b);
-        public static Fraction operator /(Fraction a, float b) => a * new Fraction(1, b);
-        public static Fraction operator /(int a, Fraction b) => b / a;
-        public static Fraction operator /(double a, Fraction b) => b / a;
-        public static Fraction operator /(decimal a, Fraction b) => b / a;
-        public static Fraction operator /(float a, Fraction b) => b / a;
+        public static Fraction operator /(Fraction a, int b) => new Fraction(a.numerator, a.denominator * b);
+        public static Fraction operator /(Fraction a, double b) => new Fraction(a.numerator, a.denominator * b);
+        public static Fraction operator /(Fraction a, decimal b) => new Fraction(a.numerator, a.denominator * b);
+        public static Fraction operator /(Fraction a, float b) => new Fraction(a.numerator, a.denominator * b);
+        public static Fraction operator /(int a, Fraction b) => new Fraction(a * b.denominator, b.numerator);
+        public static Fraction operator /(double a, Fraction b) => new Fraction(a * b.denominator, b.numerator);
+        public static Fraction operator /(decimal a, Fraction b) => new Fraction(a * b.denominator, b.numerator);
+        public static Fraction operator /(float a, Fraction b) => new Fraction(a * b.denominator, b.numerator);
         public static bool operator ==(Fraction a, Fraction b) => a.RealValue == b.RealValue;
         public static bool operator ==(Fraction a, int b) => a.RealValue == b;
         public static bool operator ==(Fraction a, double b) => a.RealValue == b;
@@ -273,12 +253,12 @@ namespace FractionClass
             }
             return $"{integers}({numerator}/{denominator})";
             */
-
+            
             if (Math.Abs(numerator) % Math.Abs(denominator) == 0)
             {
                 return $"{sign}{Math.Abs(numerator) / Math.Abs(denominator)}";
             }
-
+            
             return $"{numerator}/{denominator}";
 
         }
