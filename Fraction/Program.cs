@@ -26,11 +26,21 @@ namespace FractionClass
             Console.WriteLine(new Fraction(2,1));
             Console.WriteLine(new Fraction(0.5,0.5));
 
-            Console.WriteLine(fraction4.Pow(8).GetRealValue());
-            Console.WriteLine(fraction4.Pow(8));
+            Console.WriteLine(fraction4.Pow(9).GetRealValue());
+            Console.WriteLine(fraction4.Pow(9));
 
             Console.WriteLine(fraction1 > fraction2);
             Console.WriteLine(fraction1.GetRealValue() + " " + fraction2.GetRealValue());
+
+            Console.WriteLine(new Fraction(1.0,0.331).GetRealValue() == new Fraction(1.0000001,0.331).GetRealValue());
+
+            Console.WriteLine(0.25.GetHashCode() + " " + new Fraction(1,4).GetHashCode());
+            Console.WriteLine(new Fraction(1,4).GetRealValue().Equals(0.24));
+
+            Console.WriteLine(new Fraction(0.5, (Int128)1));
+
+            Console.WriteLine(new Fraction(Fraction.Parse("1/2"), Fraction.Parse("0.33")));
+            Console.WriteLine(new Fraction(1) * new Fraction(0.33, Fraction.Parse("1")));
         }
     }
 }
