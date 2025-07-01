@@ -41,6 +41,8 @@ namespace FractionClass
 
             Console.WriteLine(new Fraction(Fraction.Parse("1/2"), Fraction.Parse("0.33")));
             Console.WriteLine(new Fraction(1) * new Fraction(0.33, Fraction.Parse("1")));
+
+            Console.WriteLine(5 * new Fraction(3,10));
         }
     }
 }
